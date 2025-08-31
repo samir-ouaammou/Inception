@@ -1,18 +1,20 @@
 COMPOSE_FILE = ./srcs/docker-compose.yml
 
+COMPOSE = docker compose
+
 all: up
 
 up:
-	docker-compose -f $(COMPOSE_FILE) up -d --build
+	$(COMPOSE) -f $(COMPOSE_FILE) up -d --build
 
 down:
-	docker-compose -f $(COMPOSE_FILE) down
+	$(COMPOSE) -f $(COMPOSE_FILE) down
 
 stop:
-	docker-compose -f $(COMPOSE_FILE) stop
+	$(COMPOSE) -f $(COMPOSE_FILE) stop
 
 start:
-	docker-compose -f $(COMPOSE_FILE) start
+	$(COMPOSE) -f $(COMPOSE_FILE) start
 
 status:
 	docker container ls
