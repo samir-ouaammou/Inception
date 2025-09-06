@@ -1,12 +1,12 @@
-version: '3.8'
+version: "3.9"
 
 services:
   mariadb:
     build: ./requirements/mariadb
     container_name: mariadb
-    restart: always
-    env_file:
-      - .env
+    env_file: .env
+    ports:
+      - "3306:3306"
     volumes:
       - mariadb_data:/var/lib/mysql
     networks:
@@ -15,70 +15,33 @@ services:
   wordpress:
     build: ./requirements/wordpress
     container_name: wordpress
-    restart: always
-    env_file:
-      - .env
     depends_on:
       - mariadb
-    volumes:
-      - wordpress_data:/var/www/html
+    env_file: .env
+    ports:
+      - "9000:9000"
     networks:
       - inception
+    volumes:
+      - wordpress_data:/var/www/html
 
   nginx:
     build: ./requirements/nginx
     container_name: nginx
-    restart: always
-    ports:
-      - "443:443"
-    volumes:
-      - wordpress_data:/var/www/html
-    env_file:
-      - .env
     depends_on:
       - wordpress
-    networks:
-      - inception
-
-  adminer:
-    build: ./requirements/bonus/Adminer
-    container_name: adminer
-    restart: always
+    env_file: .env
     ports:
-      - "8080:8080"
+      - "80:80"
+      - "443:443"
     networks:
       - inception
-
-  redis:
-    build: ./requirements/bonus/redis
-    container_name: redis
-    restart: always
-    networks:
-      - inception
-
-  ftp:
-    build: ./requirements/bonus/FTP
-    container_name: ftp
-    restart: always
-    ports:
-      - "21:21"
-    networks:
-      - inception
-
-  website:
-    build: ./requirements/bonus/WebSites
-    container_name: website
-    restart: always
-    ports:
-      - "8000:80"
-    networks:
-      - inception
+    volumes:
+      - wordpress_data:/var/www/html
 
 volumes:
   mariadb_data:
-    driver: local
   wordpress_data:
-    driver: local
 
 networks:
   inception:
