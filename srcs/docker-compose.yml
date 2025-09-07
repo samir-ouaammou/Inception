@@ -1,8 +1,6 @@
-version: '3.8'
 services:
     mariadb:
         container_name: mariadb
-        image: mariadb:samir
         build:
             context: requirements/mariadb
             dockerfile: Dockerfile
@@ -22,7 +20,6 @@ services:
         depends_on: 
             - mariadb
         container_name: wordpress
-        image: wordpress:samir
         build:
             context: requirements/wordpress
             dockerfile: Dockerfile
@@ -48,7 +45,6 @@ services:
         depends_on: 
             - wordpress
         container_name: nginx
-        image: nginx:samir
         build:
             context: requirements/nginx
             dockerfile: Dockerfile

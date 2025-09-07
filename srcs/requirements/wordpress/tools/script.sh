@@ -34,6 +34,8 @@ wp user create  \
 	$WP_USER $WP_USER_EMAIL --role=author \
 	--user_pass=$WP_USER_PASSWORD --allow-root --path='/var/www/html'
 
-sed -i 's#listen = /run/php/php7.4-fpm.sock#listen = 0.0.0.0:9000#' /etc/php/7.4/fpm/pool.d/www.conf
+sed -i 's#listen = /run/php/php8.4-fpm.sock#listen = 0.0.0.0:9000#' /etc/php/8.4/fpm/pool.d/www.conf
 
-/usr/sbin/php-fpm7.4 -F
+chmod -R 777 /var/www/html
+
+/usr/sbin/php-fpm8.4 -F

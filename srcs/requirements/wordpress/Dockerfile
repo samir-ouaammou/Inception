@@ -1,9 +1,9 @@
-FROM debian:bullseye
+FROM debian:trixie-backports
 
 RUN apt-get update -y && \
  	apt-get install vim -y && \
 	apt-get install wget -y && \
-	apt-get install -y php7.4 php7.4-fpm php-mysql
+	apt-get install -y php8.4 php8.4-fpm php-mysql
 
 COPY tools/script.sh /
 

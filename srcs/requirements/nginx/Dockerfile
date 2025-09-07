@@ -1,4 +1,4 @@
-FROM debian:bullseye
+FROM debian:trixie-backports
 
 RUN apt-get update -y && apt-get install nginx -y && \
 	apt-get install openssl -y && \
