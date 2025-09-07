@@ -1,14 +1,13 @@
-FROM debian:trixie-backports
+FROM debian:bullseye
 
-RUN apt update && apt install -y mariadb-server && rm -rf /var/lib/apt/lists/*
+RUN apt-get update -y && apt-get upgrade -y && \
+	apt-get install mariadb-server -y && \
+ 	apt-get install vim -y
 
-RUN mkdir -p /var/lib/mysql
+COPY conf/50-server.cnf	/etc/mysql/mariadb.conf.d/50-server.cnf
 
-COPY tools/mariadb.sh /mariadb.sh
-COPY conf/mariadb.conf /etc/mysql/mariadb.conf.d/
+COPY ./tools/script.sh /
 
-RUN chmod +x /mariadb.sh
+RUN chmod +x /script.sh
 
-VOLUME ["/var/lib/mysql"]
-
-CMD ["/mariadb.sh"]
+CMD ["/script.sh"]

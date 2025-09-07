@@ -1,13 +1,15 @@
-FROM debian:trixie-backports
+FROM debian:bullseye
 
-RUN apt update && apt install -y nginx openssl \
-    && rm -rf /var/lib/apt/lists/*
+RUN apt-get update -y && apt-get install nginx -y && \
+	apt-get install openssl -y && \
+ 	apt-get install vim -y
 
-RUN mkdir -p /etc/nginx/ssl
+RUN mkdir -p /etc/nginx/ssl \
+	&& openssl req -x509 -nodes \
+	-out /etc/nginx/ssl/inception.crt \
+	-keyout /etc/nginx/ssl/inception.key \
+	-subj "/C=MR/L=Casa/O=42/OU=1337/UID=samir/CN=souaammo.42.fr"
 
-COPY tools/nginx.sh /nginx.sh
-COPY conf/nginx.conf /etc/nginx/nginx.conf
+COPY conf/default.conf /etc/nginx/nginx.conf
 
-RUN chmod +x /nginx.sh
-
-CMD ["/nginx.sh"]
+CMD [ "nginx", "-g", "daemon off;" ]

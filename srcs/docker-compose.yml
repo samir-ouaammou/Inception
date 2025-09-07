@@ -1,48 +1,89 @@
-version: "3.9"
-
+version: '3.8'
 services:
-  mariadb:
-    build: ./requirements/mariadb
-    container_name: mariadb
-    env_file: .env
-    ports:
-      - "3306:3306"
-    volumes:
-      - mariadb_data:/var/lib/mysql
-    networks:
-      - inception
+    mariadb:
+        container_name: mariadb
+        image: mariadb:samir
+        build:
+            context: requirements/mariadb
+            dockerfile: Dockerfile
+        env_file: .env
+        environment:
+            MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+            MYSQL_DATABASE: ${MYSQL_DATABASE}
+            MYSQL_USER: ${MYSQL_USER}
+            MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+        volumes:
+            - mariadb:/var/lib/mysql
+        networks: 
+            - inception
+        restart: unless-stopped
 
-  wordpress:
-    build: ./requirements/wordpress
-    container_name: wordpress
-    depends_on:
-      - mariadb
-    env_file: .env
-    ports:
-      - "9000:9000"
-    networks:
-      - inception
-    volumes:
-      - wordpress_data:/var/www/html
+    wordpress:
+        depends_on: 
+            - mariadb
+        container_name: wordpress
+        image: wordpress:samir
+        build:
+            context: requirements/wordpress
+            dockerfile: Dockerfile
+        env_file: .env
+        environment:
+            WORDPRESS_DB_HOST: ${WORDPRESS_DB_HOST}
+            WORDPRESS_DB_USER: ${WORDPRESS_DB_USER}
+            WORDPRESS_DB_PASSWORD: ${WORDPRESS_DB_PASSWORD}
+            WORDPRESS_DB_NAME: ${WORDPRESS_DB_NAME}
+            WP_ADMIN_USER: ${WP_ADMIN_USER}
+            WP_ADMIN_PASSWORD: ${WP_ADMIN_PASSWORD}
+            WP_ADMIN_EMAIL: ${WP_ADMIN_EMAIL}
+            WP_USER: ${WP_USER}
+            WP_USER_PASSWORD: ${WP_USER_PASSWORD}
+            WP_USER_EMAIL: ${WP_USER_EMAIL}
+        volumes:
+            - wordpress:/var/www/html
+        networks: 
+            - inception
+        restart: unless-stopped
 
-  nginx:
-    build: ./requirements/nginx
-    container_name: nginx
-    depends_on:
-      - wordpress
-    env_file: .env
-    ports:
-      - "80:80"
-      - "443:443"
-    networks:
-      - inception
-    volumes:
-      - wordpress_data:/var/www/html
-
+    nginx:
+        depends_on: 
+            - wordpress
+        container_name: nginx
+        image: nginx:samir
+        build:
+            context: requirements/nginx
+            dockerfile: Dockerfile
+        env_file: .env
+        environment:
+            DOMAIN_NAME: ${DOMAIN_NAME}
+            NGINX_HOST: ${NGINX_HOST}
+            NGINX_PORT: ${NGINX_PORT}
+            SSL_CERT_PATH: ${SSL_CERT_PATH}
+            SSL_KEY_PATH: ${SSL_KEY_PATH}
+        volumes:
+            - wordpress:/var/www/html
+        networks: 
+            - inception
+        ports:
+            - "${NGINX_PORT}:443"
+        restart: unless-stopped
+    
 volumes:
-  mariadb_data:
-  wordpress_data:
+    wordpress:
+        name: wordpress
+        driver: local
+        driver_opts:
+            type: "none"
+            device: "/home/souaammo/data/wordpress"
+            o: "bind"
+    mariadb:
+        name: mariadb
+        driver: local
+        driver_opts:
+            type: "none"
+            device: "/home/souaammo/data/mariadb"
+            o: "bind"
 
 networks:
-  inception:
-    driver: bridge
+    inception:
+        driver: bridge
+        name: inception
