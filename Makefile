@@ -24,10 +24,11 @@ down:
 	@docker compose -f $(COMPOSE_FILE) down
 
 clean: down
+	@docker compose -f $(COMPOSE_FILE) down -v
 	@docker system prune -af --volumes
 
 fclean:
-	@docker compose -f $(COMPOSE_FILE) down --rmi all --volumes --remove-orphans
+	@docker compose -f $(COMPOSE_FILE) down -v --rmi all --volumes --remove-orphans
 	@docker system prune -af --volumes
 
 re: down up
