@@ -1,41 +1,51 @@
 #!/bin/bash
-sleep 4
+sleep 5
 
-wget https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar
-
-chmod +x wp-cli.phar 
-
-mv wp-cli.phar /usr/local/bin/wp
+if [ ! -f /usr/local/bin/wp ]; then
+    wget -q https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar
+    chmod +x wp-cli.phar 
+    mv wp-cli.phar /usr/local/bin/wp
+fi
 
 mkdir -p /var/www/html
-
 mkdir -p /run/php
-
 cd /var/www/html
 
-wp core download --allow-root
+if [ ! -f index.php ]; then
+    wp core download --allow-root
+fi
 
-mv wp-config-sample.php wp-config.php
+if [ ! -f wp-config.php ]; then
+    wp config create \
+        --dbname="$MYSQL_DATABASE" \
+        --dbuser="$MYSQL_USER" \
+        --dbpass="$MYSQL_PASSWORD" \
+        --dbhost="mariadb:3306" \
+        --allow-root
+fi
 
-wp config set --allow-root DB_NAME $MYSQL_DATABASE --path='/var/www/html'
-wp config set --allow-root DB_USER $MYSQL_USER --path='/var/www/html'
-wp config set --allow-root DB_PASSWORD $MYSQL_PASSWORD --path='/var/www/html' 
-wp config set --allow-root DB_HOST 'mariadb:3306' --path='/var/www/html'
+if ! wp core is-installed --allow-root; then
+    wp core install \
+        --url="$DOMAIN_NAME" \
+        --title="INCEPTION" \
+        --admin_user="$WP_ADMIN_USER" \
+        --admin_password="$WP_ADMIN_PASSWORD" \
+        --admin_email="$WP_ADMIN_EMAIL" \
+        --skip-email \
+        --allow-root
+fi
 
-wp core install  \
-	--url=$DOMAIN_NAME --title=INCEPTION \
-	--admin_user=$WP_ADMIN_USER \
-	--admin_password=$WP_ADMIN_PASSWORD \
-	--admin_email=$WP_ADMIN_EMAIL \
-	--allow-root --path='/var/www/html'
-
-
-wp user create  \
-	$WP_USER $WP_USER_EMAIL --role=author \
-	--user_pass=$WP_USER_PASSWORD --allow-root --path='/var/www/html'
+if ! wp user get "$WP_USER" --allow-root >/dev/null 2>&1; then
+    wp user create \
+        "$WP_USER" "$WP_USER_EMAIL" \
+        --role=author \
+        --user_pass="$WP_USER_PASSWORD" \
+        --allow-root
+fi
 
 sed -i 's#listen = /run/php/php8.4-fpm.sock#listen = 0.0.0.0:9000#' /etc/php/8.4/fpm/pool.d/www.conf
 
 chmod -R 777 /var/www/html
 
-/usr/sbin/php-fpm8.4 -F
+echo "🚀 Starting php-fpm..."
+exec /usr/sbin/php-fpm8.4 -F
