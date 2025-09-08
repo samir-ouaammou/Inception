@@ -17,5 +17,4 @@ STOP
 kill "$db_pid"
 wait "$db_pid" 2>/dev/null
 
-echo "🚀 Starting mysql..."
 exec mysqld_safe

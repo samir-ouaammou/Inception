@@ -1,9 +1,6 @@
 version: "3.9"
 
 services:
-  # -------------------------
-  # Mandatory services
-  # -------------------------
   mariadb:
     container_name: mariadb
     build:
@@ -67,10 +64,6 @@ services:
     ports:
       - "${NGINX_PORT}:443"
     restart: unless-stopped
-
-  # -------------------------
-  # Bonus services
-  # -------------------------
 
   redis:
     container_name: redis

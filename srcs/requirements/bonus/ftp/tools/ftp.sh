@@ -1,4 +1,5 @@
 #!/bin/bash
+
 set -e
 
 useradd -m $FTP_USER -d $FTP_HOME || true

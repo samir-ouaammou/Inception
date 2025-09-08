@@ -1,4 +1,5 @@
 #!/bin/bash
+
 mkdir -p /adminer
 
 wget https://www.adminer.org/latest.php -O /adminer/index.php 
