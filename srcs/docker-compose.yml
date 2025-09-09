@@ -1,5 +1,3 @@
-version: "3.9"
-
 services:
   mariadb:
     container_name: mariadb
@@ -18,9 +16,23 @@ services:
       - inception
     restart: unless-stopped
 
+  redis:
+    depends_on:
+      - mariadb
+    container_name: redis
+    build:
+      context: requirements/bonus/redis
+      dockerfile: Dockerfile
+    networks:
+      - inception
+    ports:
+      - "${REDIS_PORT}:6379"
+    restart: unless-stopped
+
   wordpress:
     depends_on:
       - mariadb
+      - redis
     container_name: wordpress
     build:
       context: requirements/wordpress
@@ -37,14 +49,18 @@ services:
       WP_USER: ${WP_USER}
       WP_USER_PASSWORD: ${WP_USER_PASSWORD}
       WP_USER_EMAIL: ${WP_USER_EMAIL}
+      REDIS_HOST: ${REDIS_HOST}
+      REDIS_PORT: ${REDIS_PORT}
     volumes:
       - wordpress:/var/www/html
     networks:
       - inception
     restart: unless-stopped
-
+  
   nginx:
     depends_on:
+      - mariadb
+      - redis
       - wordpress
     container_name: nginx
     build:
@@ -63,17 +79,6 @@ services:
       - inception
     ports:
       - "${NGINX_PORT}:443"
-    restart: unless-stopped
-
-  redis:
-    container_name: redis
-    build:
-      context: requirements/bonus/redis
-      dockerfile: Dockerfile
-    networks:
-      - inception
-    ports:
-      - "${REDIS_PORT}:6379"
     restart: unless-stopped
 
   ftp:

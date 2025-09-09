@@ -1,4 +1,5 @@
 #!/bin/bash
+
 sleep 5
 
 if [ ! -f /usr/local/bin/wp ]; then
@@ -45,7 +46,21 @@ fi
 
 sed -i 's#listen = /run/php/php8.4-fpm.sock#listen = 0.0.0.0:9000#' /etc/php/8.4/fpm/pool.d/www.conf
 
+chown -R www-data:www-data /var/www/html
 chmod -R 777 /var/www/html
+chown -R www-data:www-data /var/www/html/wp-content
+chmod -R 777 /var/www/html/wp-content
+
+wp plugin install redis-cache --activate --allow-root
+
+if wp redis status --allow-root | grep -q "disabled"; then
+    wp redis enable --host=redis --port=6379 --allow-root
+fi
+
+if ! grep -q "define('WP_REDIS_HOST'" wp-config.php; then
+    echo "define('WP_REDIS_HOST', 'redis');" >> wp-config.php
+    echo "define('WP_REDIS_PORT', 6379);" >> wp-config.php
+fi
 
 echo "🚀 Starting php-fpm..."
 exec /usr/sbin/php-fpm8.4 -F
