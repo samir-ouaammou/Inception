@@ -95,10 +95,10 @@ services:
       - "${FTP_PORT}:21"
     restart: unless-stopped
 
-  static-site:
-    container_name: static-site
+  static-website:
+    container_name: static-website
     build:
-      context: requirements/bonus/website
+      context: requirements/bonus/static-website
       dockerfile: Dockerfile
     networks:
       - inception
@@ -117,15 +117,15 @@ services:
       - "${ADMINER_PORT}:8080"
     restart: unless-stopped
 
-  my_website:
-    container_name: my_website
+  web_service:
+    container_name: web_service
     build:
-      context: requirements/bonus/website
+      context: requirements/bonus/web_service
       dockerfile: Dockerfile
     networks:
       - inception
     ports:
-      - "${MY_WEBSITE_PORT}:${MY_WEBSITE_PORT}"
+      - "${WEB_SERVICE}:80"
     restart: unless-stopped
 
 volumes:
