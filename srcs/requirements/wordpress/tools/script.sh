@@ -23,6 +23,8 @@ if [ ! -f wp-config.php ]; then
         --dbpass="$MYSQL_PASSWORD" \
         --dbhost="mariadb:3306" \
         --allow-root
+
+    echo "if (!isset(\$_SERVER['HTTP_HOST'])) { \$_SERVER['HTTP_HOST'] = 'localhost'; }" >> wp-config.php
 fi
 
 if ! wp core is-installed --allow-root; then
