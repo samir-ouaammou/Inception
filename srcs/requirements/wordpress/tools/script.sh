@@ -53,10 +53,17 @@ chmod -R 777 /var/www/html
 chown -R www-data:www-data /var/www/html/wp-content
 chmod -R 777 /var/www/html/wp-content
 
-echo "[wordpress]: installing redis-cache..."
-wp plugin install redis-cache --activate --allow-root --path=/var/www/html
+if ! wp plugin is-installed redis-cache --allow-root --path=/var/www/html; then
+    echo "[wordpress]: installing redis-cache..."
+    wp plugin install redis-cache --activate --allow-root --path=/var/www/html
+fi
+
 wp config set WP_REDIS_HOST "redis" --allow-root --path=/var/www/html
-wp redis enable --allow-root --path=/var/www/html
+
+if ! wp redis status --allow-root --path=/var/www/html | grep -q "Connected"; then
+    wp redis enable --allow-root --path=/var/www/html
+fi
+
 
 echo "🚀 Starting php-fpm..."
 exec /usr/sbin/php-fpm8.4 -F
