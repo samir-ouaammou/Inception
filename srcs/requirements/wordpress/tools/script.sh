@@ -57,7 +57,7 @@ if wp redis status --allow-root | grep -q "disabled"; then
     wp redis enable --host=redis --port=6379 --allow-root
 fi
 
-if ! grep -q "define('WP_REDIS_HOST'" wp-config.php; then
+if ! grep -q "WP_REDIS_HOST" wp-config.php; then
     echo "define('WP_REDIS_HOST', 'redis');" >> wp-config.php
     echo "define('WP_REDIS_PORT', 6379);" >> wp-config.php
 fi
