@@ -125,7 +125,7 @@ services:
     networks:
       - inception
     ports:
-      - "${WEB_SERVICE}:${WEB_SERVICE}"
+      - "${WEB_SERVICE}:80"
     restart: unless-stopped
 
 volumes:
