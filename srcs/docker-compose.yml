@@ -1,4 +1,10 @@
+# <===( All Services )===>
 services:
+
+  # <===( MariaDB Service )===>
+  # This service runs MariaDB, which is the relational database used by WordPress.
+  # It stores all WordPress data like posts, pages, users, settings, and metadata.
+  # The container persists data using a Docker volume so that it survives container restarts.
   mariadb:
     container_name: mariadb
     build:
@@ -14,8 +20,12 @@ services:
       - mariadb:/var/lib/mysql
     networks:
       - inception
-    restart: unless-stopped
+    restart: always
 
+
+  # <===( Redis Service )===>
+  # Redis is an in-memory caching system that speeds up WordPress by storing frequently accessed data.
+  # It reduces database load and improves performance, especially for high-traffic sites.
   redis:
     depends_on:
       - mariadb
@@ -27,8 +37,12 @@ services:
       - inception
     ports:
       - "${REDIS_PORT}:6379"
-    restart: unless-stopped
+    restart: always
 
+
+  # <===( WordPress Service )===>
+  # WordPress is the core CMS service, running PHP-FPM and connecting to MariaDB and Redis.
+  # It manages site content, themes, plugins, and users.
   wordpress:
     depends_on:
       - mariadb
@@ -55,8 +69,12 @@ services:
       - wordpress:/var/www/html
     networks:
       - inception
-    restart: unless-stopped
-  
+    restart: always
+
+
+  # <===( Nginx Service )===>
+  # Nginx is the web server that serves WordPress over HTTPS.
+  # It handles SSL termination, static file serving, and proxying requests to PHP-FPM.
   nginx:
     depends_on:
       - mariadb
@@ -79,8 +97,12 @@ services:
       - inception
     ports:
       - "${NGINX_PORT}:443"
-    restart: unless-stopped
+    restart: always
 
+
+  # <===( FTP Service )===>
+  # FTP service allows uploading and managing files directly in the WordPress container.
+  # Useful for developers or site maintenance when direct access to the filesystem is needed.
   ftp:
     container_name: ftp
     build:
@@ -93,8 +115,12 @@ services:
       - inception
     ports:
       - "${FTP_PORT}:21"
-    restart: unless-stopped
+    restart: always
 
+
+  # <===( Static Website Service )===>
+  # Serves a separate static website independent of WordPress.
+  # Can be used for landing pages, documentation, or marketing sites.
   static-website:
     container_name: static-website
     build:
@@ -104,8 +130,12 @@ services:
       - inception
     ports:
       - "${STATIC_SITE_PORT}:80"
-    restart: unless-stopped
+    restart: always
 
+
+  # <===( Adminer Service )===>
+  # Adminer is a web-based database management tool for MariaDB.
+  # Provides a simple UI to manage databases, tables, and users.
   adminer:
     container_name: adminer
     build:
@@ -115,8 +145,11 @@ services:
       - inception
     ports:
       - "${ADMINER_PORT}:8080"
-    restart: unless-stopped
+    restart: always
 
+
+  # <===( Custom Web Service )===>
+  # Any additional web service (API, backend service) connected to the same network.
   web_service:
     container_name: web_service
     build:
@@ -126,8 +159,11 @@ services:
       - inception
     ports:
       - "${WEB_SERVICE}:${WEB_SERVICE}"
-    restart: unless-stopped
+    restart: always
 
+
+# <===( Volumes for persisting data )===>
+# Docker volumes to persist WordPress files and MariaDB data outside containers.
 volumes:
   wordpress:
     name: wordpress
@@ -144,6 +180,9 @@ volumes:
       device: "/home/souaammo/data/mariadb"
       o: "bind"
 
+
+# <===( Network for all services )===>
+# All services use the 'inception' bridge network for communication.
 networks:
   inception:
     driver: bridge
