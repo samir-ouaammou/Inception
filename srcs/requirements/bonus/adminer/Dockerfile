@@ -1,26 +1,26 @@
-# Use Debian Trixie backports as the base image
 FROM debian:trixie-backports
+# Use Debian Trixie backports as the base image
 
-# Update the package lists for upgrades and new packages
 RUN apt-get update
+# Update the package lists for upgrades and new packages
 
-# Install PHP
 RUN apt-get install -y php
+# Install PHP
 
-# Install PHP MySQLi extension for database access
 RUN apt-get install -y php-mysqli
+# Install PHP MySQLi extension for database access
 
-# Install wget to download files from the internet
 RUN apt-get install -y wget
+# Install wget to download files from the internet
 
-# Copy the adminer.sh script from the local tools folder to the container root
 COPY tools/adminer.sh /
+# Copy the adminer.sh script from the local tools folder to the container root
 
-# Make the script executable
 RUN chmod +x /adminer.sh
+# Make the script executable
 
-# Inform Docker that the container will listen on port 8080
 EXPOSE 8080
+# Inform Docker that the container will listen on port 8080
 
-# Default command to run when the container starts (launch the Adminer script)
 CMD [ "/adminer.sh" ]
+# Default command to run when the container starts (launch the Adminer script)
