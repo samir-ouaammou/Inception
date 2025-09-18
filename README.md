@@ -6,7 +6,6 @@
 
 **Inception** is an advanced educational and practical project focused on **DevOps and Infrastructure as Code**, designed to teach students how to build a fully integrated, balanced, and modular environment using **Docker** and **Docker Compose**.
 
-<img width="1148" height="731" alt="Screenshot from 2025-09-18 17-19-53" src="https://github.com/user-attachments/assets/ae0f0316-0a20-4422-bb36-f41bad41bb25" />
 The core idea is **containerization**: each service runs in its own isolated container, yet all containers communicate seamlessly to simulate a **production-like environment**.
 
 This project covers fundamental and advanced concepts in system management and application deployment, including:
@@ -19,6 +18,11 @@ This project covers fundamental and advanced concepts in system management and a
 * **Reverse Proxy & TLS/SSL:** Use NGINX to route requests and secure connections.
 * **Databases & Caching:** Manage persistent data using MariaDB and optimize performance with Redis.
 * **Web Services & CMS:** Run WordPress with PHP-FPM, add FTP, Adminer/phpMyAdmin, and optional bonus services like static websites and microservices.
+
+---
+* Your NGINX container must be the only entry point to your infrastructure, accessible exclusively through port 443, using only the TLSv1.2 or TLSv1.3 protocol.
+* This diagram provided in the subject should help clarify the setup:
+<img width="1148" height="731" alt="Screenshot from 2025-09-18 17-19-53" src="https://github.com/user-attachments/assets/ae0f0316-0a20-4422-bb36-f41bad41bb25" />
 
 ---
 
