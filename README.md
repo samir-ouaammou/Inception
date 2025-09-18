@@ -115,30 +115,53 @@ This project covers fundamental and advanced concepts in system management and a
 ## 📂 Project Structure
 
 ```
-inception/
-├── Makefile                # Automation of build/run commands
-├── .env                    # Environment variables
-├── docker-compose.yml      # Multi-container orchestration
-├── srcs/                   # Source files for each service
-│   ├── nginx/
-│   │   ├── Dockerfile      # Build instructions for NGINX
-│   │   └── conf/           # NGINX configuration files
-│   ├── wordpress/
-│   │   ├── Dockerfile      # Build WordPress + PHP-FPM image
-│   │   └── wp-content/     # Plugins, themes, uploads volume
-│   ├── mariadb/
-│   │   └── Dockerfile      # Build MariaDB image with initialization scripts
-│   ├── redis/
-│   │   └── Dockerfile      # Optional Redis container
-│   ├── ftp/
-│   │   └── Dockerfile      # Optional FTP service
-│   ├── adminer/
-│   │   └── Dockerfile      # Optional Adminer service
-│   ├── static-site/
-│   │   └── Dockerfile      # Optional static website container
-│   └── web-service/
-│       └── Dockerfile      # Optional API / microservice container
-└── volumes/                # Persisted data volumes (WordPress, MariaDB)
+Project/
+├── Makefile                        # Automates build, run, stop, clean commands
+├── srcs/                           # Source files for all services
+│   ├── docker-compose.yml          # Multi-container orchestration
+│   ├── .env                        # Environment variables (DB, user, passwords)
+│   └── requirements/               # All mandatory + bonus services
+│       ├── nginx/                  # NGINX container
+│       │   ├── conf/               # NGINX configuration files
+│       │   │   └── default.conf    # Main NGINX virtual host config
+│       │   └── Dockerfile          # Build instructions for NGINX image
+│       ├── wordpress/              # WordPress container
+│       │   ├── Dockerfile          # Build WP + PHP-FPM image
+│       │   └── tools/              # Init + setup scripts
+│       │       └── script.sh       # Automates WordPress installation
+│       ├── mariadb/                # MariaDB container
+│       │   ├── conf/               # Database configuration
+│       │   │   └── 50-server.conf  # Custom MariaDB server settings
+│       │   ├── Dockerfile          # Build MariaDB image
+│       │   └── tools/              # Init scripts
+│       │       └── script.sh       # Create DB, users, privileges
+│       ├── bonus/                  # Bonus services (extra containers)
+│       │   ├── redis/              # Redis caching system
+│       │   │   ├── Dockerfile
+│       │   │   └── tools/
+│       │   │       └── redis.sh    # Launch Redis server
+│       │   ├── ftp/                # FTP server for file transfer
+│       │   │   ├── conf/
+│       │   │   │   └── vsftpd.conf # FTP server configuration
+│       │   │   ├── Dockerfile
+│       │   │   └── tools/
+│       │   │       └── ftp.sh      # Setup FTP users & permissions
+│       │   ├── adminer/            # Adminer DB management tool
+│       │   │   ├── Dockerfile
+│       │   │   └── tools/
+│       │   │       └── adminer.sh  # Start Adminer
+│       │   ├── static-website/     # Simple static site (HTML)
+│       │   │   ├── Dockerfile
+│       │   │   └── index.html      # Website homepage
+│       │   └── web_service/        # Custom web microservice
+│       │       ├── conf/
+│       │       │   └── nginx.conf  # Web service reverse proxy config
+│       │       ├── Dockerfile
+│       │       └── tools/
+│       │           ├── script.sh   # Service init script
+│       │           └── website/    # Service files/content
+└── Subject/                        # School project subject
+    └── subject.pdf
 ```
 
 ---
