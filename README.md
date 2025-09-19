@@ -1,6 +1,6 @@
 # 🐳 Inception Project – 1337 / 42
 
-<img width="1147" height="652" alt="Screenshot from 2025-09-18 17-13-49" src="https://github.com/user-attachments/assets/0b4ef82d-9609-4b35-b065-2cb298faaa2e" />
+<img width="1173" height="656" alt="Screenshot from 2025-09-19 09-13-09" src="https://github.com/user-attachments/assets/e920ac02-0014-4db8-86ef-470ea24f0222" />
 
 ## 🌟 Project Overview
 
@@ -157,13 +157,8 @@ Project/
 │       │   ├── static-website/     # Simple static site (HTML)
 │       │   │   ├── Dockerfile
 │       │   │   └── index.html      # Website homepage
-│       │   └── web_service/        # Custom web microservice
-│       │       ├── conf/
-│       │       │   └── nginx.conf  # Web service reverse proxy config
-│       │       ├── Dockerfile
-│       │       └── tools/
-│       │           ├── script.sh   # Service init script
-│       │           └── website/    # Service files/content
+│       │   └── web_service/        # Set up a service of your choice that you think is useful. During the defense, you will have to justify your choice.
+│
 └── Subject/                        # School project subject
     └── subject.pdf
 ```
