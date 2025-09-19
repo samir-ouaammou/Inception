@@ -247,117 +247,108 @@ Project/
 ## 🚀 Services Overview
 
 ### 🌐 NGINX
-
-* High-performance web server and reverse proxy.
-* Handles TLS/SSL for HTTPS.
-* Routes requests to backend services like WordPress.
+- Acts as the **entry point** to your infrastructure.  
+- Handles **HTTPS** connections with TLSv1.2 or TLSv1.3.  
+- Serves static files and **reverse-proxies** requests to WordPress.  
+- Only accessible through **port 443**.  
+- Ensures **secure, centralized access** to your services.
 
 ### 📝 WordPress + PHP-FPM
-
-* PHP-based CMS.
-* PHP-FPM manages FastCGI requests.
-* Volume stores plugins, themes, uploads.
-* Networked with MariaDB and Redis.
+- Hosts your **WordPress website**.  
+- Uses **PHP-FPM** to process PHP scripts efficiently.  
+- Does **not include NGINX**; relies on NGINX container for HTTP traffic.  
+- Connects to **MariaDB** for database storage.  
+- Files and database stored in **Docker volumes** for persistence.
 
 ### 🛢 MariaDB
-
-* Relational database for WordPress data.
-* Persistent storage via volumes.
-* Networked with WordPress and Adminer/phpMyAdmin.
+- Provides **database storage** for WordPress.  
+- Fully isolated from other services.  
+- Stores data in **persistent Docker volumes**.  
+- Must have at least **two users**, one of which is an administrator (username not containing "admin").
 
 ### 🧠 Redis (Bonus)
-
-* In-memory cache for performance.
-* Networked with WordPress only.
+- Caching service to improve WordPress performance.  
+- Speeds up database queries and reduces load on MariaDB.  
+- Optional bonus service for enhanced efficiency.
 
 ### 📂 FTP (Bonus)
-
-* Direct upload of files to WordPress.
-* Secure via FTPS.
-* Networked with WordPress.
+- Allows access to WordPress files via FTP.  
+- Can point directly to the **WordPress volume**.  
+- Useful for managing files without entering the container manually.
 
 ### 🛠 Adminer / phpMyAdmin (Bonus)
-
-* Web-based database management.
-* Networked with MariaDB.
+- Web-based tool for managing **MariaDB databases**.  
+- Provides an easy interface to inspect, edit, or export database content.  
+- Useful for administration and debugging during development.
 
 ### 🌐 Static Website (Bonus)
-
-* HTML, CSS, JS container.
-* Serves as portfolio or documentation site.
-* Networked with NGINX.
+- Optional small static site in any language **except PHP**.  
+- Can serve as a showcase, portfolio, or additional project page.  
+- Runs in its own container with an optional dedicated volume.
 
 ### 🔧 Web Service (Bonus)
-
-* Small API or microservice.
-* Networked with other internal containers.
+- Any additional service of your choice.  
+- Must justify its usefulness during project defense.
 
 ---
 
 ## ⚙️ Docker Concepts
 
 ### Virtualization vs Containerization
-
-* **Virtual Machine:** full OS + kernel + apps running on hypervisor. Heavy.
-* **Docker Container:** shares host kernel, lightweight, isolated.
-* Containers = isolated environments.
+* **Virtual Machine (VM):** full OS + kernel + apps running on a hypervisor. Heavy and slower to start.  
+* **Docker Container:** shares host OS kernel, lightweight, isolated environment. Starts in seconds.  
+* Containers = **isolated, portable, reproducible environments** for applications.
 
 ### Core Docker Components
-
-* **Docker Engine:** core system running Docker.
-* **Docker Daemon:** background service that builds, runs, and manages containers.
-* **Docker CLI:** command-line interface (`docker run`, `docker build`, etc.).
-* **Docker API:** programmatic interface for tools to communicate with Docker.
+* **Docker Engine:** the core system that runs Docker and manages containers.  
+* **Docker Daemon (`dockerd`):** background service that builds, runs, and manages containers.  
+* **Docker CLI:** command-line interface for interacting with Docker (`docker run`, `docker build`, etc.).  
+* **Docker API:** programmatic interface that allows tools to communicate with Docker programmatically.
 
 ### Isolation & Resource Control
-
-* **Namespaces:** isolate processes, network, mounts, users.
-* **Cgroups:** limit resources like CPU and RAM.
+* **Namespaces:** isolate processes, network, mounts, and users for containers.  
+* **Cgroups (Control Groups):** limit and allocate resources like CPU, memory, and I/O for containers.
 
 ### Images & Containers
-
-* **Dockerfile:** defines how to build an image.
-* **Layer:** each instruction in Dockerfile creates a new layer.
-* **Copy-on-Write (CoW):** shared layers between containers.
-* **Docker Image:** template.
-* **Docker Container:** live instance of an image.
-* **PID 1:** first process inside container, handles signals and child processes.
+* **Dockerfile:** blueprint that defines how to build an image.  
+* **Image Layer:** each instruction in a Dockerfile creates a new layer.  
+* **Copy-on-Write (CoW):** allows containers to share image layers efficiently without duplicating data.  
+* **Docker Image:** read-only template used to create containers.  
+* **Docker Container:** a live, running instance of an image.  
+* **PID 1:** the first process inside a container; handles signals and reaps child processes to prevent zombie processes.
 
 ### Data & Networking
-
-* **Volumes:** store persistent data (e.g., WordPress uploads, MariaDB tables).
-* **Networks:** connect containers internally.
-* **Ports:** expose container ports externally.
-* **ENV:** environment variables for configuration.
-* **Configuration:** service-specific configuration files.
+* **Volumes:** store persistent data outside the container (e.g., WordPress uploads, MariaDB tables).  
+* **Bind Mounts:** map host directories into containers for development or shared access.  
+* **Networks:** allow containers to communicate internally and optionally expose services externally.  
+* **Ports:** map container ports to host ports for external access.  
+* **Environment Variables (ENV):** configuration values passed to containers at runtime.  
+* **Configuration Files:** service-specific settings stored inside containers or volumes.
 
 ### Orchestration
-
-* **Docker Compose:** define and run multiple containers with one YAML file.
+* **Docker Compose:** define and run multiple containers with a single YAML file. Handles networks, volumes, and service dependencies automatically.
 
 ### Servers & Web
-
-* **Server:** system or software listening for requests.
-* **Web Server:** handles HTTP/HTTPS.
-* **NGINX:** high-performance web server.
-* **Reverse Proxy:** routes requests to backend services.
-* **TLS/SSL:** secure communication.
+* **Server:** system or software that listens and responds to requests.  
+* **Web Server:** handles HTTP/HTTPS requests from clients.  
+* **NGINX:** high-performance, popular web server and reverse proxy.  
+* **Reverse Proxy:** routes incoming requests to backend services (e.g., WordPress container).  
+* **TLS/SSL:** protocols for secure communication over HTTPS.
 
 ### Application Layer
-
-* **WordPress:** PHP CMS.
-* **PHP-FPM:** FastCGI process manager.
-* **FastCGI:** protocol connecting NGINX to PHP-FPM.
+* **WordPress:** PHP-based CMS (Content Management System) for websites.  
+* **PHP-FPM:** FastCGI Process Manager for executing PHP scripts efficiently.  
+* **FastCGI:** protocol that connects NGINX to PHP-FPM.
 
 ### Databases & Caching
-
-* **MariaDB:** relational database storing users, posts, settings.
-* **Redis:** in-memory cache for better performance.
+* **MariaDB:** relational database used by WordPress to store users, posts, settings, etc.  
+* **Redis:** in-memory cache to improve performance by reducing database load.
 
 ### Extra Services
+* **FTP:** upload files directly to WordPress container or shared volumes.  
+* **Adminer / phpMyAdmin:** web-based interfaces to manage databases easily.  
 
-* **FTP:** upload files directly to WordPress container.
-* **Adminer / phpMyAdmin:** web-based database management interfaces.
+💡 **Tip:** This cheat sheet covers all major Docker concepts needed for projects like Inception, giving you a clear mental map of containers, images, networks, and volumes.
 
 ---
 
@@ -377,6 +368,26 @@ Project/
 
 ## ✅ Conclusion
 
-The Inception project equips students with practical knowledge to build, manage, and scale a complete infrastructure using Docker, connecting multiple services, ensuring security, and understanding the inner workings of modern DevOps environments.
+The Inception project provides students with **hands-on experience** in building, managing, and scaling a complete infrastructure using Docker. It covers:
 
-Thank you for exploring the Inception project! Stay tuned for more challenges. 🔥
+- Connecting multiple services in a secure and efficient way.  
+- Managing persistent data with volumes and environment configurations.  
+- Understanding networking between containers and the host.  
+- Implementing web servers, databases, caching, and application layers.  
+- Applying best practices for containerization and modern DevOps workflows.  
+
+By completing this project, students gain a **solid foundation** in container-based infrastructure and are better prepared for real-world deployments.  
+
+---
+## 🧠 Author
+
+> 👤 **Samir Ouaammou**  
+> Student at [1337 School – UM6P, 42 Network]  
+> 🖥️ Passionate about low-level programming and a dedicated Full Stack Developer.    
+> 📫 Connect with me on [LinkedIn](https://www.linkedin.com/in/samir-ouaammou-53a1b5333/)
+
+---
+
+🔥 Thank you for checking out my Inception project! Keep exploring, keep learning, and stay tuned for more exciting challenges. 👋
+
+
