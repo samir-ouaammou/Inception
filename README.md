@@ -26,16 +26,25 @@ This project covers fundamental and advanced concepts in system management and a
 
 ---
 
-## 🎯 Project Objectives
+# 🎯 Project Objectives -- Inception
 
-1. Understand differences between Virtual Machines and Containers.
-2. Build a multi-service environment using **Docker Compose**.
-3. Manage internal networks and persistent storage.
-4. Deploy applications like WordPress, MariaDB, and Redis in isolated containers.
-5. Ensure infrastructure is **modular, scalable, and secure**.
-6. Master best practices for Docker images, Dockerfiles, and environment variables.
-7. Gain practical experience with web servers, reverse proxies, and TLS certificates.
-
+01. Understand differences between Virtual Machines and Containers.
+02. Learn system administration with Docker.
+03. Build a multi-service infrastructure using **Docker Compose**.
+04. Write Dockerfiles for each service (NGINX, WordPress + PHP-FPM, MariaDB).
+05. Configure NGINX as the single entry point (HTTPS only, TLSv1.2/1.3).
+06. Set up persistent volumes for database and WordPress files.
+07. Manage internal Docker networks for container communication.
+08. Ensure infrastructure is **modular, scalable, and secure**.
+09. Ensure containers are resilient and restart automatically.
+10. Apply Docker best practices (PID 1, daemons, no hacky fixes).
+11. Master best practices for Dockerfiles, images, and environment variables.
+12. Gain practical experience with web servers, reverse proxies, and TLS certificates.
+13. Add Redis caching for WordPress.
+14. Add an FTP server connected to WordPress files.
+15. Deploy a static website (HTML/CSS/JS).
+16. Add Adminer for database management.
+17. Set up a custom service of your choice and justify it during defense.
 ---
 
 ## 💡 Key Concepts Explained
